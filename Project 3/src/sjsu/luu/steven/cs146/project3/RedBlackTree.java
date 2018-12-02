@@ -189,7 +189,59 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 	}
 
 	public void fixTree(RedBlackTree.Node<String> current) {
-		//
+		RedBlackTree.Node<String> auntNode = getAunt(current);
+		RedBlackTree.Node<String> parentNode = current.parent;
+		RedBlackTree.Node<String> grandParentNode = parentNode.parent;
+		
+		if(current.key.equals(root.key)) {
+			current.isRed = false;
+			current.color = 1;
+			} 
+		
+		else if (parentNode.isRed == false && parentNode.color == 1) {
+			return;
+		}
+		
+		else
+			if(current.isRed && parentNode.isRed) { // Need to deal with all cases here
+				if((auntNode.isRed == false && auntNode.color == 1) || auntNode == null) { 
+					//CASE 1
+					if(isLeftChild(grandParentNode,parentNode) && !isLeftChild(grandParentNode,current)) {
+						rotateLeft(parentNode);
+						fixTree(parentNode);
+					}
+					//CASE 2
+					else if(!isLeftChild(grandParentNode,parentNode) && isLeftChild(grandParentNode,current)) {
+						rotateRight(parentNode);
+						fixTree(parentNode);
+					}
+					//CASE 3
+					else if(isLeftChild(grandParentNode,parentNode) && isLeftChild(grandParentNode,current)) {
+						parentNode.isRed = false;
+						parentNode.color = 1;
+						grandParentNode.isRed = true;
+						grandParentNode.color = 0;
+						rotateRight(grandParentNode);
+					}
+					//CASE 4
+					else if(!isLeftChild(grandParentNode,parentNode) && !isLeftChild(grandParentNode,current)) {
+						parentNode.isRed = false;
+						parentNode.color = 1;
+						grandParentNode.isRed = true;
+						grandParentNode.color = 0;
+						rotateLeft(grandParentNode);
+					}
+				}
+				else if(auntNode.isRed) {
+					current.parent.isRed = false; //Parent is changed to black.
+					current.parent.color = 1;
+					auntNode.isRed = false;		//auntNode is changed to black.
+					auntNode.parent.color = 1;
+					grandParentNode.isRed = true; //GrandParent is changed to red.
+					grandParentNode.color= 0;
+					fixTree(grandParentNode); //Recursively fix tree
+				}
+			}
 	}
 
 	public boolean isEmpty(RedBlackTree.Node<String> n) {
