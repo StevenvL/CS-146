@@ -75,8 +75,32 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 
 	// place a new node in the RB tree with data the parameter and color it red.
 	public void addNode(String data) { // this < that <0. this > that >0
-		// fill
+		RedBlackTree.Node<String> currentNode = root;
+		RedBlackTree.Node<String> addMe = new RedBlackTree.Node<String>(data);
 
+		if (root == null) {
+			root = addMe;
+		} else {
+			while (currentNode.isLeaf() == false) { // While loop to get to lead node.
+				if (addMe.key.compareTo(currentNode.key) > 0)
+					currentNode = currentNode.rightChild;
+				else
+					currentNode = currentNode.leftChild;
+			}
+			// Once leaf node is found compare it to addMe so it knows which side to add it
+			// on.
+			// Update whether leftChild or rightChild. Set the leaf as the parent of addMe.
+			// Set the color to 0 and isRed to true.
+			if (addMe.key.compareTo(currentNode.key) > 0) {
+				addMe = currentNode.rightChild;
+				currentNode = addMe.parent;
+			} else
+				addMe = currentNode.leftChild;
+			currentNode = addMe.parent;
+		}
+		addMe.color = 0;
+		addMe.isRed = true;
+		fixTree(addMe);
 	}
 
 	public void insert(String data) {
@@ -84,15 +108,40 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 	}
 
 	public RedBlackTree.Node<String> lookup(String k) {
-		// fill
+		Node<String> compareToMe = root;
+		// use compareTo() and if its less it will return a negative number, positive if
+		// greater, and 0 if its the same.
+		if (compareToMe.key.compareTo(k) > 0)
+			compareToMe = compareToMe.rightChild;
+		else if (compareToMe.key.compareTo(k) < 0)
+			compareToMe = compareToMe.leftChild;
+		return compareToMe;
+
 	}
 
-	public RedBlackTree.Node<String> getSibling(RedBlackTree.Node<String> n) {
-		//
+	public RedBlackTree.Node<String> getSibling(RedBlackTree.Node<String> n) { // needs to return the sibling of the
+																				// node
+		RedBlackTree.Node<String> parentNode = n.parent;
+
+		if (parentNode.leftChild.key.compareTo(n.key) == 0)
+			return parentNode.rightChild;
+		if (parentNode.rightChild.key.compareTo(n.key) == 0)
+			return parentNode.leftChild;
+		else
+			return null;
 	}
 
 	public RedBlackTree.Node<String> getAunt(RedBlackTree.Node<String> n) {
-		//
+		RedBlackTree.Node<String> grandParentNode = getGrandparent(n);
+		RedBlackTree.Node<String> parentNode = n.parent;
+
+		if (grandParentNode.leftChild.key.compareTo(parentNode.key) == 0)
+			return parentNode.rightChild;
+		if (grandParentNode.rightChild.key.compareTo(parentNode.key) == 0)
+			return parentNode.leftChild;
+		else
+			return null;
+
 	}
 
 	public RedBlackTree.Node<String> getGrandparent(RedBlackTree.Node<String> n) {
@@ -100,11 +149,43 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 	}
 
 	public void rotateLeft(RedBlackTree.Node<String> n) {
-		//
+		RedBlackTree.Node<String> tempNode = n.rightChild; // y
+		n.rightChild = tempNode.leftChild; // x
+
+		if (tempNode.leftChild != null)
+			tempNode.leftChild.parent = n;
+
+		tempNode.parent = n.parent;
+
+		if (n.parent == null)
+			root = tempNode;
+		else if (n.equals(n.parent.leftChild))
+			n.parent.leftChild = tempNode;
+		else
+			n.parent.rightChild = tempNode;
+
+		tempNode.leftChild = n;
+		n.parent = tempNode;
 	}
 
 	public void rotateRight(RedBlackTree.Node<String> n) {
-		//
+		RedBlackTree.Node<String> tempNode = n.rightChild; // y
+		n.leftChild = tempNode.rightChild; // x
+
+		if (tempNode.rightChild != null)
+			tempNode.rightChild.parent = n;
+
+		tempNode.parent = n.parent;
+
+		if (n.parent == null)
+			root = tempNode;
+		else if (n.equals(n.parent.rightChild))
+			n.parent.rightChild = tempNode;
+		else
+			n.parent.leftChild = tempNode;
+
+		tempNode.rightChild = n;
+		n.parent = tempNode;
 	}
 
 	public void fixTree(RedBlackTree.Node<String> current) {
