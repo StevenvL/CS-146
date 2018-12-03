@@ -30,6 +30,11 @@ public class RBTTester {
 	}
 
 	// add tester for spell checker
+	@Test
+	public void testSpellChecker() {
+	 RedBlackTree rbt = new RedBlackTree();
+	 //read from dictionary with stuff
+	}
 
 	public static String makeString(RedBlackTree t) {
 		class MyVisitor implements RedBlackTree.Visitor {

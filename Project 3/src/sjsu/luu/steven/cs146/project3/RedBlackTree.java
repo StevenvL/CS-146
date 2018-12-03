@@ -1,7 +1,7 @@
 package sjsu.luu.steven.cs146.project3;
 
 public class RedBlackTree<Key extends Comparable<Key>> {
-	private RedBlackTree.Node<String> root;
+	private static RedBlackTree.Node<String> root;
 
 	public static class Node<Key extends Comparable<Key>> { // changed to static
 
@@ -109,14 +109,19 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 
 	public RedBlackTree.Node<String> lookup(String k) {
 		Node<String> compareToMe = root;
+		boolean found = false;
 		// use compareTo() and if its less it will return a negative number, positive if
 		// greater, and 0 if its the same.
-		if (compareToMe.key.compareTo(k) > 0)
-			compareToMe = compareToMe.rightChild;
-		else if (compareToMe.key.compareTo(k) < 0)
-			compareToMe = compareToMe.leftChild;
-		return compareToMe;
 
+		while (found != true) {
+			if (compareToMe.key.compareTo(k) > 0)
+				compareToMe = compareToMe.rightChild;
+			else if (compareToMe.key.compareTo(k) < 0)
+				compareToMe = compareToMe.leftChild;
+			else if (compareToMe.key.compareTo(k) == 0)
+				return compareToMe;
+		}
+		return null;
 	}
 
 	public RedBlackTree.Node<String> getSibling(RedBlackTree.Node<String> n) { // needs to return the sibling of the
@@ -189,59 +194,60 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 	}
 
 	public void fixTree(RedBlackTree.Node<String> current) {
-		RedBlackTree.Node<String> auntNode = getAunt(current);
-		RedBlackTree.Node<String> parentNode = current.parent;
-		RedBlackTree.Node<String> grandParentNode = parentNode.parent;
-		
-		if(current.key.equals(root.key)) {
-			current.isRed = false;
-			current.color = 1;
-			} 
-		
-		else if (parentNode.isRed == false && parentNode.color == 1) {
-			return;
-		}
-		
-		else
-			if(current.isRed && parentNode.isRed) { // Need to deal with all cases here
-				if((auntNode.isRed == false && auntNode.color == 1) || auntNode == null) { 
-					//CASE 1
-					if(isLeftChild(grandParentNode,parentNode) && !isLeftChild(grandParentNode,current)) {
+		//need to check if shits busted or not.
+		if (current == root || current == current.parent) {
+			RedBlackTree.Node<String> auntNode = getAunt(current);
+			RedBlackTree.Node<String> parentNode = current.parent;
+			RedBlackTree.Node<String> grandParentNode = parentNode.parent;
+		} else {
+			if (current.key.equals(root.key)) {
+				current.isRed = false;
+				current.color = 1;
+			}
+
+			else if (parentNode.isRed == false && parentNode.color == 1) {
+				return;
+			}
+
+			else if (current.isRed && parentNode.isRed) { // Need to deal with all cases here
+				if ((auntNode.isRed == false && auntNode.color == 1) || auntNode == null) {
+					// CASE 1
+					if (isLeftChild(grandParentNode, parentNode) && !isLeftChild(grandParentNode, current)) {
 						rotateLeft(parentNode);
 						fixTree(parentNode);
 					}
-					//CASE 2
-					else if(!isLeftChild(grandParentNode,parentNode) && isLeftChild(grandParentNode,current)) {
+					// CASE 2
+					else if (!isLeftChild(grandParentNode, parentNode) && isLeftChild(grandParentNode, current)) {
 						rotateRight(parentNode);
 						fixTree(parentNode);
 					}
-					//CASE 3
-					else if(isLeftChild(grandParentNode,parentNode) && isLeftChild(grandParentNode,current)) {
+					// CASE 3
+					else if (isLeftChild(grandParentNode, parentNode) && isLeftChild(grandParentNode, current)) {
 						parentNode.isRed = false;
 						parentNode.color = 1;
 						grandParentNode.isRed = true;
 						grandParentNode.color = 0;
 						rotateRight(grandParentNode);
 					}
-					//CASE 4
-					else if(!isLeftChild(grandParentNode,parentNode) && !isLeftChild(grandParentNode,current)) {
+					// CASE 4
+					else if (!isLeftChild(grandParentNode, parentNode) && !isLeftChild(grandParentNode, current)) {
 						parentNode.isRed = false;
 						parentNode.color = 1;
 						grandParentNode.isRed = true;
 						grandParentNode.color = 0;
 						rotateLeft(grandParentNode);
 					}
-				}
-				else if(auntNode.isRed) {
-					current.parent.isRed = false; //Parent is changed to black.
+				} else if (auntNode.isRed) {
+					current.parent.isRed = false; // Parent is changed to black.
 					current.parent.color = 1;
-					auntNode.isRed = false;		//auntNode is changed to black.
+					auntNode.isRed = false; // auntNode is changed to black.
 					auntNode.parent.color = 1;
-					grandParentNode.isRed = true; //GrandParent is changed to red.
-					grandParentNode.color= 0;
-					fixTree(grandParentNode); //Recursively fix tree
+					grandParentNode.isRed = true; // GrandParent is changed to red.
+					grandParentNode.color = 0;
+					fixTree(grandParentNode); // Recursively fix tree
 				}
 			}
+		}
 	}
 
 	public boolean isEmpty(RedBlackTree.Node<String> n) {
@@ -269,5 +275,12 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 		v.visit(n);
 		preOrderVisit(n.leftChild, v);
 		preOrderVisit(n.rightChild, v);
+	}
+
+	public static void main(String[] args) {
+		RedBlackTree rbt = new RedBlackTree();
+		rbt.insert("D");
+		rbt.insert("B");
+		System.out.println(rbt.lookup("B"));
 	}
 }
