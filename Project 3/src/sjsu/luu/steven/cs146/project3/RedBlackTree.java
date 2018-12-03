@@ -115,11 +115,11 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 		// greater, and 0 if its the same.
 
 		while (found != true) {
-			if (compareToMe.key.compareTo(k) > 0)
+			if (k.compareTo(compareToMe.key) > 0)
 				compareToMe = compareToMe.rightChild;
-			else if (compareToMe.key.compareTo(k) < 0)
+			else if (k.compareTo(compareToMe.key) < 0)
 				compareToMe = compareToMe.leftChild;
-			else if (compareToMe.key.compareTo(k) == 0)
+			else if (k.compareTo(compareToMe.key) == 0)
 				return compareToMe;
 			else
 				return null;
