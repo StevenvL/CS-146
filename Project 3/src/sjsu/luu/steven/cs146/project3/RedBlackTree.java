@@ -92,11 +92,12 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 			// Update whether leftChild or rightChild. Set the leaf as the parent of addMe.
 			// Set the color to 0 and isRed to true.
 			if (addMe.key.compareTo(currentNode.key) > 0) {
-				addMe = currentNode.rightChild;
-				currentNode = addMe.parent;
-			} else
-				addMe = currentNode.leftChild;
-			currentNode = addMe.parent;
+				currentNode.rightChild = addMe;
+				addMe.parent = currentNode;
+			} else {
+				currentNode.leftChild = addMe;
+				addMe.parent = currentNode;
+			}
 		}
 		addMe.color = 0;
 		addMe.isRed = true;
@@ -120,6 +121,8 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 				compareToMe = compareToMe.leftChild;
 			else if (compareToMe.key.compareTo(k) == 0)
 				return compareToMe;
+			else
+				return null;
 		}
 		return null;
 	}
@@ -194,22 +197,20 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 	}
 
 	public void fixTree(RedBlackTree.Node<String> current) {
-		//need to check if shits busted or not.
-		if (current == root || current == current.parent) {
-			RedBlackTree.Node<String> auntNode = getAunt(current);
-			RedBlackTree.Node<String> parentNode = current.parent;
-			RedBlackTree.Node<String> grandParentNode = parentNode.parent;
-		} else {
 			if (current.key.equals(root.key)) {
 				current.isRed = false;
 				current.color = 1;
 			}
 
-			else if (parentNode.isRed == false && parentNode.color == 1) {
+			else if (current.parent.isRed == false && current.parent.color == 1) {
 				return;
 			}
 
-			else if (current.isRed && parentNode.isRed) { // Need to deal with all cases here
+			else if (current.isRed && current.parent.isRed) { // Need to deal with all cases here
+				RedBlackTree.Node<String> auntNode = getAunt(current);
+				RedBlackTree.Node<String> parentNode = current.parent;
+				RedBlackTree.Node<String> grandParentNode = parentNode.parent;
+				
 				if ((auntNode.isRed == false && auntNode.color == 1) || auntNode == null) {
 					// CASE 1
 					if (isLeftChild(grandParentNode, parentNode) && !isLeftChild(grandParentNode, current)) {
@@ -248,7 +249,6 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 				}
 			}
 		}
-	}
 
 	public boolean isEmpty(RedBlackTree.Node<String> n) {
 		if (n.key == null) {
@@ -276,11 +276,17 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 		preOrderVisit(n.leftChild, v);
 		preOrderVisit(n.rightChild, v);
 	}
+	
+	public void returnData(RedBlackTree.Node<String> returnMe) { //temp code delete later.
+		System.out.println(returnMe.key);
+	}
 
 	public static void main(String[] args) {
 		RedBlackTree rbt = new RedBlackTree();
 		rbt.insert("D");
+		rbt.returnData(rbt.lookup("D"));
 		rbt.insert("B");
-		System.out.println(rbt.lookup("B"));
+		rbt.returnData(rbt.lookup("B"));
+		//System.out.println(rbt.lookup("B"));
 	}
 }
