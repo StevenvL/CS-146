@@ -76,29 +76,33 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 	// place a new node in the RB tree with data the parameter and color it red.
 	public void addNode(String data) { // this < that <0. this > that >0
 		RedBlackTree.Node<String> currentNode = root;
+		RedBlackTree.Node<String> parentOfCurrent = null;
 		RedBlackTree.Node<String> addMe = new RedBlackTree.Node<String>(data);
 
 		if (root == null) {
 			root = addMe;
 		} else {
-			while (currentNode.isLeaf() == false) { // While loop to get to lead node.
-				if (addMe.key.compareTo(currentNode.key) > 0)
+			while (currentNode != null) { // While loop to get to lead node.
+				if (addMe.key.compareTo(currentNode.key) > 0) {
+					parentOfCurrent = currentNode;
 					currentNode = currentNode.rightChild;
-				else
+				} else {
+					parentOfCurrent = currentNode;
 					currentNode = currentNode.leftChild;
 			}
 			// Once leaf node is found compare it to addMe so it knows which side to add it
 			// on.
 			// Update whether leftChild or rightChild. Set the leaf as the parent of addMe.
 			// Set the color to 0 and isRed to true.
-			if (addMe.key.compareTo(currentNode.key) > 0) {
-				currentNode.rightChild = addMe;
-				addMe.parent = currentNode;
-			} else {
-				currentNode.leftChild = addMe;
-				addMe.parent = currentNode;
 			}
-		}
+				currentNode = addMe;
+				addMe.parent = parentOfCurrent;
+				if(addMe.key.compareTo(parentOfCurrent.key) > 0)
+					parentOfCurrent.rightChild = addMe;
+				else
+					parentOfCurrent.leftChild = addMe;
+			}
+		
 		addMe.color = 0;
 		addMe.isRed = true;
 		fixTree(addMe);
@@ -144,9 +148,9 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 		RedBlackTree.Node<String> parentNode = n.parent;
 
 		if (grandParentNode.leftChild.key.compareTo(parentNode.key) == 0)
-			return parentNode.rightChild;
+			return grandParentNode.rightChild;
 		if (grandParentNode.rightChild.key.compareTo(parentNode.key) == 0)
-			return parentNode.leftChild;
+			return grandParentNode.leftChild;
 		else
 			return null;
 
@@ -177,7 +181,7 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 	}
 
 	public void rotateRight(RedBlackTree.Node<String> n) {
-		RedBlackTree.Node<String> tempNode = n.rightChild; // y
+		RedBlackTree.Node<String> tempNode = n.leftChild; // y
 		n.leftChild = tempNode.rightChild; // x
 
 		if (tempNode.rightChild != null)
@@ -211,7 +215,7 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 				RedBlackTree.Node<String> parentNode = current.parent;
 				RedBlackTree.Node<String> grandParentNode = parentNode.parent;
 				
-				if ((auntNode.isRed == false && auntNode.color == 1) || auntNode == null) {
+				if (auntNode == null || (auntNode.isRed == false && auntNode.color == 1)) {
 					// CASE 1
 					if (isLeftChild(grandParentNode, parentNode) && !isLeftChild(grandParentNode, current)) {
 						rotateLeft(parentNode);
@@ -285,8 +289,17 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 		RedBlackTree rbt = new RedBlackTree();
 		rbt.insert("D");
 		rbt.returnData(rbt.lookup("D"));
+		
 		rbt.insert("B");
 		rbt.returnData(rbt.lookup("B"));
-		//System.out.println(rbt.lookup("B"));
+		rbt.insert("A");
+		rbt.returnData(rbt.lookup("A"));
+
+		rbt.insert("F");
+		rbt.returnData(rbt.lookup("F"));
+		
+
+		
+		
 	}
 }
