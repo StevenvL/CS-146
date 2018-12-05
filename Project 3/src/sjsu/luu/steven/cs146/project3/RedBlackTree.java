@@ -64,13 +64,18 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 		printTree(currentNode);
 	}
 
-	public void printTree(RedBlackTree.Node<String> node) {
+	public void printTree(RedBlackTree.Node<String> node){
 		System.out.print(node.key);
-		if (node.isLeaf()) {
+		System.out.println();
+		if (isLeaf(node)){
 			return;
 		}
-		printTree(node.leftChild);
-		printTree(node.rightChild);
+		if (node.leftChild != null) {
+			printTree(node.leftChild);
+		}
+		if (node.rightChild != null) {
+			printTree(node.rightChild);
+		}
 	}
 
 	// place a new node in the RB tree with data the parameter and color it red.
@@ -201,58 +206,49 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 	}
 
 	public void fixTree(RedBlackTree.Node<String> current) {
-			if (current.key.equals(root.key)) {
-				current.isRed = false;
-				current.color = 1;
-			}
-
-			else if (current.parent.isRed == false && current.parent.color == 1) {
-				return;
-			}
-
-			else if (current.isRed && current.parent.isRed) { // Need to deal with all cases here
-				RedBlackTree.Node<String> auntNode = getAunt(current);
-				RedBlackTree.Node<String> parentNode = current.parent;
-				RedBlackTree.Node<String> grandParentNode = parentNode.parent;
-				
-				if (auntNode == null || (auntNode.isRed == false && auntNode.color == 1)) {
-					// CASE 1
-					if (isLeftChild(grandParentNode, parentNode) && !isLeftChild(grandParentNode, current)) {
-						rotateLeft(parentNode);
-						fixTree(parentNode);
-					}
-					// CASE 2
-					else if (!isLeftChild(grandParentNode, parentNode) && isLeftChild(grandParentNode, current)) {
-						rotateRight(parentNode);
-						fixTree(parentNode);
-					}
-					// CASE 3
-					else if (isLeftChild(grandParentNode, parentNode) && isLeftChild(grandParentNode, current)) {
-						parentNode.isRed = false;
-						parentNode.color = 1;
-						grandParentNode.isRed = true;
-						grandParentNode.color = 0;
-						rotateRight(grandParentNode);
-					}
-					// CASE 4
-					else if (!isLeftChild(grandParentNode, parentNode) && !isLeftChild(grandParentNode, current)) {
-						parentNode.isRed = false;
-						parentNode.color = 1;
-						grandParentNode.isRed = true;
-						grandParentNode.color = 0;
-						rotateLeft(grandParentNode);
-					}
-				} else if (auntNode.isRed) {
-					current.parent.isRed = false; // Parent is changed to black.
+		if (current == root) {
+			current.isRed = false;
+			current.color = 1;
+			return;
+		} else if (current.parent.isRed == false) {
+			return;
+		} 
+		else if (current.isRed == true && current.parent.isRed == true) {
+			if (getAunt(current) == null || getAunt(current).isRed == false) {
+				if (getGrandparent(current).leftChild == current.parent &&
+						current.parent.rightChild == current) {
+					Node<String> parent = current.parent;
+					rotateLeft(current);
+					fixTree(parent);
+				} else if (getGrandparent(current).rightChild == current.parent &&
+						current.parent.leftChild == current) {
+					Node<String> parent = current.parent;
+					rotateRight(current);
+					fixTree(parent);			
+				} else if (getGrandparent(current).leftChild == current.parent &&
+						current.parent.leftChild == current) {
+					current.parent.isRed = false;
 					current.parent.color = 1;
-					auntNode.isRed = false; // auntNode is changed to black.
-					auntNode.parent.color = 1;
-					grandParentNode.isRed = true; // GrandParent is changed to red.
-					grandParentNode.color = 0;
-					fixTree(grandParentNode); // Recursively fix tree
+					getGrandparent(current).isRed = true;
+					rotateRight(getGrandparent(current));
+				} else if (getGrandparent(current).rightChild == current.parent &&
+						current.parent.rightChild == current) {
+					current.parent.isRed = false;
+					current.parent.color = 1;
+					getGrandparent(current).isRed = true;
+					rotateLeft(getGrandparent(current));
 				}
+			} else if (getAunt(current).isRed == true) {
+				current.parent.isRed = false;
+				current.parent.color = 1;
+				getAunt(current).isRed = false;
+				getAunt(current).color = 1;
+				getGrandparent(current).isRed = true;
+				getGrandparent(current).color = 0;
+				fixTree(getGrandparent(current));
 			}
 		}
+	}
 
 	public boolean isEmpty(RedBlackTree.Node<String> n) {
 		if (n.key == null) {
@@ -286,18 +282,21 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 	}
 
 	public static void main(String[] args) {
-		RedBlackTree rbt = new RedBlackTree();
+		RedBlackTree<String> rbt = new RedBlackTree<>();
 		rbt.insert("D");
-		rbt.returnData(rbt.lookup("D"));
+		
 		
 		rbt.insert("B");
-		rbt.returnData(rbt.lookup("B"));
 		rbt.insert("A");
-		rbt.returnData(rbt.lookup("A"));
-
-		rbt.insert("F");
-		rbt.returnData(rbt.lookup("F"));
 		
+		//rbt.insert("C");
+		
+		//rbt.insert("F");
+		
+		//rbt.insert("E");
+
+
+		rbt.printTree();
 
 		
 		
