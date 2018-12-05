@@ -2,9 +2,14 @@ package sjsu.luu.steven.cs146.project3;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 import org.junit.Test;
 
 public class RBTTester {
+	private final String INPUT_FILE_LOCATION = "/Users/stevenluu/Documents/GitHub/CS-146/Project 3/src/sjsu/luu/steven/cs146/project3/dictionary.txt";
 
 	@Test
 	// Test the Red Black Tree
@@ -28,8 +33,6 @@ public class RBTTester {
 		assertEquals(str, makeStringDetails(rbt));
 
 	}
-
-	// add tester for spell checker
 
 	public static String makeString(RedBlackTree t) {
 		class MyVisitor implements RedBlackTree.Visitor {

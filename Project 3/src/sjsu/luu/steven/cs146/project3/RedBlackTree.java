@@ -1,6 +1,13 @@
 package sjsu.luu.steven.cs146.project3;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class RedBlackTree<Key extends Comparable<Key>> {
+	private final static String INPUT_FILE_LOCATION = "src/sjsu/luu/steven/cs146/project3/dictionary.txt";
 	private static RedBlackTree.Node<String> root;
 
 	public static class Node<Key extends Comparable<Key>> { // changed to static
@@ -289,8 +296,27 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 		System.out.println(returnMe.key);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		RedBlackTree<String> rbt = new RedBlackTree<>();
+		ArrayList<String> tempList = new ArrayList<String>();
+		BufferedReader br = new BufferedReader(new FileReader(INPUT_FILE_LOCATION));
+		
+		String readLine = br.readLine();
+		while(readLine != null) {
+			tempList.add(readLine);
+			readLine = br.readLine();
+		}
+		
+		for(int i=0; i<tempList.size(); i++) {
+			rbt.insert(tempList.get(i));
+		}
+		rbt.printTree();
+		br.close();
+	}
+}
+	
+		
+		/*
 		rbt.addNode("D");
 		rbt.addNode("B");
 		rbt.addNode("A");
@@ -301,10 +327,6 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 		rbt.addNode("G");
 		rbt.addNode("I");
 		rbt.addNode("J");
-
 		rbt.printTree();
-
+		*/
 	
-
-	}
-}
