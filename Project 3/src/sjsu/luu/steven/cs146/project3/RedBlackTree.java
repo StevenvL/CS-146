@@ -146,26 +146,17 @@ public class RedBlackTree<Key extends Comparable<Key>> {
 	public RedBlackTree.Node<String> getSibling(RedBlackTree.Node<String> n) { // needs to return the sibling of the
 																				// node
 		RedBlackTree.Node<String> parentNode = n.parent;
-
-		if (parentNode.leftChild.key.compareTo(n.key) == 0)
+		if (n.leftChild == n)
 			return parentNode.rightChild;
-		if (parentNode.rightChild.key.compareTo(n.key) == 0)
+		else if (parentNode.rightChild == n)
 			return parentNode.leftChild;
 		else
 			return null;
+		
 	}
 
 	public RedBlackTree.Node<String> getAunt(RedBlackTree.Node<String> n) {
-		RedBlackTree.Node<String> grandParentNode = getGrandparent(n);
-		RedBlackTree.Node<String> parentNode = n.parent;
-
-		if (grandParentNode.leftChild.key.compareTo(parentNode.key) == 0)
-			return grandParentNode.rightChild;
-		if (grandParentNode.rightChild.key.compareTo(parentNode.key) == 0)
-			return grandParentNode.leftChild;
-		else
-			return null;
-
+		return getSibling(n.parent);
 	}
 
 	public RedBlackTree.Node<String> getGrandparent(RedBlackTree.Node<String> n) {

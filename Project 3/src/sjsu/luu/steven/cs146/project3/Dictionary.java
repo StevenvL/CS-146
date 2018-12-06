@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Dictionary {
-	private final static String INPUT_FILE_LOCATION = "src/sjsu/luu/steven/cs146/project3/dictionary.txt";
 	RedBlackTree<String> dictionary;
 
 	public Dictionary(String fileLocation) throws IOException {
@@ -23,13 +22,10 @@ public class Dictionary {
 		}
 		br.close();
 	}
-	
-	public static void main (String args[]) throws IOException {
-		double startTime = System.currentTimeMillis();
-		Dictionary dictionaryObj = new Dictionary(INPUT_FILE_LOCATION);
-		dictionaryObj.dictionary.printTree();
-		double finishTime = System.currentTimeMillis();
-		System.out.println(finishTime-startTime);
+	public boolean spellCheck(String word) {
+		if(dictionary.lookup(word) != null)
+			return true;
+		else
+			return false;
 	}
-
 }
