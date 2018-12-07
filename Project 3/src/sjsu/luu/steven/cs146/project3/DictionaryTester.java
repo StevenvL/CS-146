@@ -24,7 +24,7 @@ public class DictionaryTester {
 		Dictionary dictionaryObj = new Dictionary(DICTIONARY_FILE_LOCATION);
 		long finishTime = System.currentTimeMillis();
 		System.out.println("Time to finish building tree : " + (finishTime - startTime));
-		
+		System.out.println();
 		
 
 		// Test 2: Looks up the word "accolade" and returns the time to do so.
@@ -36,10 +36,10 @@ public class DictionaryTester {
 		if (dictionaryObj.spellCheck(lookMeUp) == false)
 			System.out.println(lookMeUp + " was not found in the dictionary");
 		System.out.println("Time to find " + lookMeUp + ": " + (finishTime - startTime));
-		
+		System.out.println();
 		
 
-		// Test 2: Looks up the word "adgjkadgkja;" and returns the time to do so.
+		// Test 3: Looks up the word "adgjkadgkja;" and returns the time to do so.
 		startTime = System.currentTimeMillis();
 		lookMeUp = "adgjkadgkja;";
 		assertFalse(dictionaryObj.spellCheck(lookMeUp));
@@ -47,10 +47,10 @@ public class DictionaryTester {
 		if (dictionaryObj.spellCheck(lookMeUp) == false)
 			System.out.println(lookMeUp + " was not found in the dictionary");
 		System.out.println("Time to find " + lookMeUp + ": " + (finishTime - startTime));
-		
+		System.out.println();
 		
 
-		// Test 3: Creates a Array List of the poem and prints out words that did not
+		// Test 4: Creates a Array List of the poem and prints out words that did not
 		// appear in the dictionary.
 		ArrayList<String> poem = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(POEM_FILE_LOCATION));
@@ -73,10 +73,10 @@ public class DictionaryTester {
 				System.out.println(elements);
 			}
 		}
+		System.out.println();
 		
 		
-		
-		// Test 4: Checks that every word said to be false by test above is in fact false.
+		// Test 5: Checks that every word said to be false by test above is in fact false.
 		for(String elements: wordsNotInDictionary) {
 			if(dictionaryObj.spellCheck(elements) == true)
 				System.out.println("This word " + elements + "is actually in the dictionary.");
@@ -84,5 +84,6 @@ public class DictionaryTester {
 		}
 		System.out.println("There are/is " +wordsNotInDictionary.size() + " word(s) in the poem that were not found in the dictionary.");
 		assertEquals(6,wordsNotInDictionary.size()); //6 words in the poem should not be in the dictionary.
+		System.out.println();
 	}
 }
