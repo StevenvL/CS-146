@@ -20,9 +20,9 @@ public class DictionaryTester {
 
 		// Test 1: Creates a dictionary and returns the amount time(milliseconds) for
 		// the creation of RBT.
-		double startTime = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis();
 		Dictionary dictionaryObj = new Dictionary(DICTIONARY_FILE_LOCATION);
-		double finishTime = System.currentTimeMillis();
+		long finishTime = System.currentTimeMillis();
 		System.out.println("Time to finish building tree : " + (finishTime - startTime));
 		
 		
@@ -62,8 +62,10 @@ public class DictionaryTester {
 			readLine = br.readLine();
 		}
 		br.close();
-
+		startTime = System.currentTimeMillis();
 		ArrayList<String> wordsNotInDictionary = dictionaryObj.wordsThatDidNotAppear(poem);
+		finishTime = System.currentTimeMillis();
+		System.out.println("Time to spell check the poem: " + (finishTime-startTime));
 		if (wordsNotInDictionary.size() == 0)
 			System.out.println("All words in poem are spelt correctly.");
 		else {
@@ -80,6 +82,7 @@ public class DictionaryTester {
 				System.out.println("This word " + elements + "is actually in the dictionary.");
 			assertFalse(dictionaryObj.spellCheck(elements));
 		}
-		System.out.println("These words cannot be found in the dictionary because of various reasons such as periods or quotations.");
+		System.out.println("There are/is " +wordsNotInDictionary.size() + " word(s) in the poem that were not found in the dictionary.");
+		assertEquals(6,wordsNotInDictionary.size()); //6 words in the poem should not be in the dictionary.
 	}
 }

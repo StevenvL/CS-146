@@ -8,6 +8,11 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+/**
+ * @author Professor Potika
+ *
+ * This class is solely written by Professor and used to test the RedBlackTree class.
+ */
 public class RBTTester {
 	private final String INPUT_FILE_LOCATION = "/Users/stevenluu/Documents/GitHub/CS-146/Project 3/src/sjsu/luu/steven/cs146/project3/dictionary.txt";
 
